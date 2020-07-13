@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import time
-from typing import List
+from typing import List, Dict, Any
 
 from phue import Bridge
 
@@ -124,3 +124,30 @@ def print_color_scheme(bridge_address: str) -> List[str]:
         scheme = f"{light.name} ({i+1}): {{'hue': {light.hue}, 'sat': {light.saturation}, 'bri': {light.brightness}}}"
         color_schemes.append(scheme)
     return color_schemes
+
+
+def flash_all_lights_red(b: Bridge, n: int, schema: Dict[str, Any]):
+    b.set_light(ALL_LIGHTS, schema)
+    for i in range(n):
+        b.set_light(ALL_LIGHTS, schema)
+        group = b.get_group(1)
+        is_on = group["action"]["on"]
+        b.set_group(1, "on", not is_on)
+        time.sleep(1)
+    group = b.get_group(1)
+    b.set_group(1, "on", False)
+
+
+def run_set_timer(bridge_address: str):
+    b = Bridge(bridge_address)
+    for i in range(3):
+        flash_all_lights_red(b, 6, BRIGHT_RED_SCHEME)  # start sequence
+        time.sleep(25)  # lift
+        print(f"Do set {i+1}")
+        print(f"Do set {i+1}")
+        print(f"Do set {i+1}")
+        print(f"Do set {i+1}")
+        print(f"Do set {i+1}")
+        flash_all_lights_red(b, 6, SORCEROUS_GREEN_SCHEME)  # break sequence
+        time.sleep(30)  # rest
+    flash_all_lights_red(b, 6, PALE_PURPLE_SCHEME)  # complete sequence

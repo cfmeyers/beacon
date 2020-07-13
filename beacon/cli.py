@@ -9,6 +9,7 @@ from beacon.beacon import (
     toggle_lights_n_times,
     print_color_scheme,
     run_fireworks,
+    run_set_timer,
 )
 
 
@@ -25,6 +26,11 @@ def main(args=None):
 @main.command()
 def toggle():
     toggle_lights("192.168.1.182")
+
+
+@main.command()
+def set_timer():
+    run_set_timer("192.168.1.182")
 
 
 @main.command()
