@@ -1,0 +1,10 @@
+    {
+      "beacon/*.py": {
+        "alternate": "tests/test_{}.py",
+        "type": "source"
+      },
+      "tests/test_{}.py": {
+        "alternate": "beacon/*.py",
+        "type": "test"
+      }
+    }
