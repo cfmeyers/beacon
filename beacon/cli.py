@@ -4,7 +4,12 @@
 import sys
 import click
 from phue import Bridge
-from beacon.beacon import toggle_lights
+from beacon.beacon import (
+    toggle_lights,
+    toggle_lights_n_times,
+    print_color_scheme,
+    run_fireworks,
+)
 
 
 @click.group()
@@ -13,16 +18,32 @@ def main(args=None):
     return 0
 
 
-# TODO https://macintoshguy.wordpress.com/2013/08/26/hacking-the-philips-hue/
-# get color profiles
+# TODO Workout timer
+# TODO Pomodoro timer
 
 
 @main.command()
 def toggle():
-    """
-    hue.py toggle
-    """
     toggle_lights("192.168.1.182")
+
+
+@main.command()
+@click.argument("n", type=int)
+def toggle_n(n: int):
+    toggle_lights_n_times("192.168.1.182", n)
+
+
+@main.command()
+@click.argument("n", type=int)
+def fireworks(n: int):
+    run_fireworks("192.168.1.182", n)
+
+
+@main.command()
+def get_color_scheme():
+    color_schemes = print_color_scheme("192.168.1.182")
+    for scheme in color_schemes:
+        click.echo(scheme)
 
 
 if __name__ == "__main__":
