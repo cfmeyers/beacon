@@ -79,6 +79,12 @@ SCHEMES = {
         LIGHT_SHELF_NEAREST: BRIGHT_RED_SCHEME,
         LIGHT_SHELF_FURTHEST: BRIGHT_RED_SCHEME,
     },
+    "tropical-twighlight": {
+        LIGHT_BOOKSHELF: {"hue": 48721, "sat": 126, "bri": 123},
+        LIGHT_FLOORLAMP: {"hue": 4482, "sat": 254, "bri": 123},
+        LIGHT_SHELF_NEAREST: {"hue": 4851, "sat": 254, "bri": 115},
+        LIGHT_SHELF_FURTHEST: {"hue": 4853, "sat": 254, "bri": 115},
+    },
 }
 
 
@@ -143,7 +149,6 @@ def print_color_scheme(bridge_address: str) -> List[str]:
 
 
 def flash_all_lights_color(b: Bridge, n: int, schema: Dict[str, Any]):
-    # b.set_light(ALL_LIGHTS, schema)
     for i in range(n):
         b.set_light(ALL_LIGHTS, schema)
         group = b.get_group(1)
@@ -170,6 +175,9 @@ def run_set_timer(bridge_address: str):
 def set_to_color_scheme(bridge_address: str, scheme: str):
     if scheme not in SCHEMES:
         print(f"Unknown scheme: {scheme}")
+        print("Scheme needs to be one of:")
+        for scheme in SCHEMES:
+            print("\t" + scheme)
         return
     b = Bridge(bridge_address)
     if not b.is_on(1):
