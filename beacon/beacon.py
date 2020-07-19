@@ -22,6 +22,14 @@ class Bridge(PBridge):
         group = self.get_group(group_num)
         self.set_group(group_num, "on", False)
 
+    def turn_on_group(self, group_num: int):
+        group = self.get_group(group_num)
+        self.set_group(group_num, "on", True)
+
+    def set_scheme_for_group(self, scheme: Dict[int, Dict[str, int]]):
+        for light_index in range(1, len(self.lights) + 1):
+            self.set_light(light_index, scheme[light_index])
+
 
 """Main module."""
 
@@ -64,7 +72,13 @@ SCHEMES = {
         LIGHT_FLOORLAMP: BRIGHT_WHITE_SCHEME,
         LIGHT_SHELF_NEAREST: BRIGHT_WHITE_SCHEME,
         LIGHT_SHELF_FURTHEST: BRIGHT_WHITE_SCHEME,
-    }
+    },
+    "bright-red": {
+        LIGHT_BOOKSHELF: BRIGHT_RED_SCHEME,
+        LIGHT_FLOORLAMP: BRIGHT_RED_SCHEME,
+        LIGHT_SHELF_NEAREST: BRIGHT_RED_SCHEME,
+        LIGHT_SHELF_FURTHEST: BRIGHT_RED_SCHEME,
+    },
 }
 
 
@@ -76,21 +90,6 @@ def toggle_lights(bridge_address: str):
     """
     b = Bridge(bridge_address)
     b.toggle_group(1)
-
-    # b.set_light(LIGHT_BOOKSHELF, "bri", 254)
-    # b.set_light(LIGHT_FLOORLAMP, "bri", 254)
-    # b.set_light(LIGHT_SHELF_NEAREST, "bri", 254)
-    # b.set_light(LIGHT_SHELF_FURTHEST, "bri", 254)
-
-    # b.set_light(ALL_LIGHTS, "bri", 254)
-    # b.set_light(ALL_LIGHTS, "hue", FULL_HUE)
-    # b.set_light(ALL_LIGHTS, BRIGHT_RED_SCHEME)
-    # b.set_light(ALL_LIGHTS, SORCEROUS_GREEN_SCHEME)
-    # b.set_light(ALL_LIGHTS, PALE_PURPLE_SCHEME)
-    # b.set_light(ALL_LIGHTS, WARM_WHITE_PINK_SCHEME)
-
-
-#
 
 
 def toggle_lights_n_times(bridge_address: str, n: int):
@@ -144,7 +143,7 @@ def print_color_scheme(bridge_address: str) -> List[str]:
 
 
 def flash_all_lights_color(b: Bridge, n: int, schema: Dict[str, Any]):
-    b.set_light(ALL_LIGHTS, schema)
+    # b.set_light(ALL_LIGHTS, schema)
     for i in range(n):
         b.set_light(ALL_LIGHTS, schema)
         group = b.get_group(1)
@@ -168,8 +167,11 @@ def run_set_timer(bridge_address: str):
     flash_all_lights_color(b, 6, PALE_PURPLE_SCHEME)  # complete sequence
 
 
-# def set_to_color_scheme(bridge_address: str, scheme: str):
-#     if scheme not in SCHEMES:
-#         print(f"Unknown scheme: {scheme}")
-#         return
-#     b = Bridge(bridge_address)
+def set_to_color_scheme(bridge_address: str, scheme: str):
+    if scheme not in SCHEMES:
+        print(f"Unknown scheme: {scheme}")
+        return
+    b = Bridge(bridge_address)
+    if not b.is_on(1):
+        b.turn_on_group(1)
+    b.set_scheme_for_group(SCHEMES[scheme])

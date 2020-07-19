@@ -52,10 +52,10 @@ def get_color_scheme():
         click.echo(scheme)
 
 
-# @main.command()
-# @click.argument("scheme", type=str)
-# def set_to_scheme(scheme: str):
-#     set_to_color_scheme("192.168.1.182", scheme)
+@main.command()
+@click.argument("scheme", type=str)
+def set_to_scheme(scheme: str):
+    set_to_color_scheme("192.168.1.182", scheme)
 
 
 if __name__ == "__main__":
