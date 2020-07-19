@@ -7,10 +7,11 @@ from phue import Bridge
 from beacon.beacon import (
     toggle_lights,
     toggle_lights_n_times,
-    print_color_scheme,
+    get_current_color_scheme,
     run_fireworks,
     run_set_timer,
     set_to_color_scheme,
+    SCHEMES,
 )
 
 
@@ -46,10 +47,16 @@ def fireworks(n: int):
 
 
 @main.command()
-def get_color_scheme():
-    color_schemes = print_color_scheme("192.168.1.182")
-    for scheme in color_schemes:
+def show_schemes():
+    for scheme in SCHEMES:
         click.echo(scheme)
+
+
+@main.command()
+def get_color_scheme():
+    color_schemes = get_current_color_scheme("192.168.1.182")
+    for light_scheme in color_schemes:
+        click.echo(light_scheme)
 
 
 @main.command()

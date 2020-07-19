@@ -167,7 +167,7 @@ def run_fireworks(bridge_address: str, n: int):
         time.sleep(1)
 
 
-def print_color_scheme(bridge_address: str) -> List[str]:
+def get_current_color_scheme(bridge_address: str) -> List[str]:
     b = Bridge(bridge_address)
     color_schemes = []
     for i, light in enumerate(b.lights):
