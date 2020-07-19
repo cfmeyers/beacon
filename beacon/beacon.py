@@ -27,8 +27,20 @@ class Bridge(PBridge):
         self.set_group(group_num, "on", True)
 
     def set_scheme_for_group(self, scheme: Dict[int, Dict[str, int]]):
+        print("Setting new schema:")
         for light_index in range(1, len(self.lights) + 1):
             self.set_light(light_index, scheme[light_index])
+            print(f"\tlight {light_index}: {scheme[light_index]}")
+
+    def get_scheme(self) -> Dict[int, Dict[str, int]]:
+        scheme = {}
+        for i, light in enumerate(self.lights):
+            scheme[i + 1] = {
+                "hue": light.hue,
+                "sat": light.saturation,
+                "bri": light.brightness,
+            }
+        return scheme
 
 
 """Main module."""
@@ -123,20 +135,36 @@ def alternate_red_blue(bridge_address: str, n: int):
         b.turn_off_group(1)
 
 
+def persist_state(f):
+    def wrapper(*args, **kwargs):
+        b = Bridge(args[0])
+        original_scheme = b.get_scheme()
+        was_on_originally = b.is_on(1)
+
+        f(*args, **kwargs)
+
+        if not was_on_originally:
+            b.turn_on_group(1)
+            b.set_scheme_for_group(original_scheme)
+            b.turn_off_group(1)
+        else:
+            b.turn_on_group(1)
+            b.set_scheme_for_group(original_scheme)
+
+    return wrapper
+
+
+@persist_state
 def run_fireworks(bridge_address: str, n: int):
-    if n % 2 != 0:
-        n += 1
     b = Bridge(bridge_address)
     for i in range(n):
         if b.is_on(1):
             schemes = random.sample(FIREWORKS_SCHEMES, len(FIREWORKS_SCHEMES))
             for light_index in range(len(b.lights)):
                 scheme = schemes[light_index]
-                scheme["transitiontime"] = random.randint(0, 100)
                 b.set_light(light_index, scheme)
         b.toggle_group(1)
         time.sleep(1)
-    b.turn_off_group(1)
 
 
 def print_color_scheme(bridge_address: str) -> List[str]:
@@ -157,18 +185,22 @@ def flash_all_lights_color(b: Bridge, n: int, schema: Dict[str, Any]):
     b.turn_off_group(1)
 
 
+@persist_state
 def run_set_timer(bridge_address: str):
+    lift_time = 25
+    rest_time = 30
+
     b = Bridge(bridge_address)
     for i in range(3):
         flash_all_lights_color(b, 6, BRIGHT_RED_SCHEME)  # start sequence
-        time.sleep(25)  # lift
+        time.sleep(lift_time)
         print(f"Do set {i+1}")
         print(f"Do set {i+1}")
         print(f"Do set {i+1}")
         print(f"Do set {i+1}")
         print(f"Do set {i+1}")
         flash_all_lights_color(b, 6, SORCEROUS_GREEN_SCHEME)  # break sequence
-        time.sleep(30)  # rest
+        time.sleep(rest_time)
     flash_all_lights_color(b, 6, PALE_PURPLE_SCHEME)  # complete sequence
 
 
