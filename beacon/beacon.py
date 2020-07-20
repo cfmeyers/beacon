@@ -26,11 +26,13 @@ class Bridge(PBridge):
         group = self.get_group(group_num)
         self.set_group(group_num, "on", True)
 
-    def set_scheme_for_group(self, scheme: Dict[int, Dict[str, int]]):
-        print("Setting new schema:")
+    def set_scheme_for_group(self, scheme: Dict[int, Dict[str, int]], verbose=False):
+        if verbose:
+            print("Setting new schema:")
         for light_index in range(1, len(self.lights) + 1):
             self.set_light(light_index, scheme[light_index])
-            print(f"\tlight {light_index}: {scheme[light_index]}")
+            if verbose:
+                print(f"\tlight {light_index}: {scheme[light_index]}")
 
     def get_scheme(self) -> Dict[int, Dict[str, int]]:
         scheme = {}
