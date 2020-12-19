@@ -2,16 +2,19 @@
 
 """Console script for beacon."""
 import sys
+
 import click
 from phue import Bridge
+
 from beacon.beacon import (
-    toggle_lights,
-    toggle_lights_n_times,
+    SCHEMES,
     get_current_color_scheme,
     run_fireworks,
+    run_interval_with_time,
     run_set_timer,
     set_to_color_scheme,
-    SCHEMES,
+    toggle_lights,
+    toggle_lights_n_times,
 )
 
 
@@ -32,6 +35,12 @@ def toggle():
 @main.command()
 def set_timer():
     run_set_timer("192.168.1.182")
+
+
+@main.command()
+@click.argument("d", type=int)
+def run_interval(d: int):
+    run_interval_with_time("192.168.1.182", d)
 
 
 @main.command()

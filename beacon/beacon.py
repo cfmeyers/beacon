@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
 import time
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from phue import Bridge as PBridge
 
@@ -204,6 +204,14 @@ def run_set_timer(bridge_address: str):
         flash_all_lights_color(b, 6, SORCEROUS_GREEN_SCHEME)  # break sequence
         time.sleep(rest_time)
     flash_all_lights_color(b, 6, PALE_PURPLE_SCHEME)  # complete sequence
+
+
+@persist_state
+def run_interval_with_time(bridge_address: str, delta: int):
+    b = Bridge(bridge_address)
+    flash_all_lights_color(b, 6, BRIGHT_RED_SCHEME)  # start sequence
+    time.sleep(delta)
+    flash_all_lights_color(b, 6, SORCEROUS_GREEN_SCHEME)  # break sequence
 
 
 def set_to_color_scheme(bridge_address: str, scheme: str):
