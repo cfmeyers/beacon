@@ -17,6 +17,9 @@ from beacon.beacon import (
     toggle_lights_n_times,
 )
 
+# IP_ADDRESS = '192.168.1.182'
+IP_ADDRESS = "192.168.1.151"
+
 
 @click.group()
 def main(args=None):
@@ -29,30 +32,30 @@ def main(args=None):
 
 @main.command()
 def toggle():
-    toggle_lights("192.168.1.182")
+    toggle_lights(IP_ADDRESS)
 
 
 @main.command()
 def set_timer():
-    run_set_timer("192.168.1.182")
+    run_set_timer(IP_ADDRESS)
 
 
 @main.command()
 @click.argument("d", type=int)
 def run_interval(d: int):
-    run_interval_with_time("192.168.1.182", d)
+    run_interval_with_time(IP_ADDRESS, d)
 
 
 @main.command()
 @click.argument("n", type=int)
 def toggle_n(n: int):
-    toggle_lights_n_times("192.168.1.182", n)
+    toggle_lights_n_times(IP_ADDRESS, n)
 
 
 @main.command()
 @click.argument("n", type=int)
 def fireworks(n: int):
-    run_fireworks("192.168.1.182", n)
+    run_fireworks(IP_ADDRESS, n)
 
 
 @main.command()
@@ -63,7 +66,7 @@ def show_schemes():
 
 @main.command()
 def get_color_scheme():
-    color_schemes = get_current_color_scheme("192.168.1.182")
+    color_schemes = get_current_color_scheme(IP_ADDRESS)
     for light_scheme in color_schemes:
         click.echo(light_scheme)
 
@@ -71,7 +74,7 @@ def get_color_scheme():
 @main.command()
 @click.argument("scheme", type=str)
 def set_to_scheme(scheme: str):
-    set_to_color_scheme("192.168.1.182", scheme)
+    set_to_color_scheme(IP_ADDRESS, scheme)
 
 
 if __name__ == "__main__":
